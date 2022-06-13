@@ -1,0 +1,47 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title style="text-align: center;">Oilix</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-button expand="default" color="medium" (click)="back()">Back</ion-button>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-button title="upload an image locally" expand="block" size="default" (click)="upload()">Image Upload</ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button title="user meta data" expand="block" size="default" color="secondary" (click)="userMeta()">User Data</ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button title="view past photos" expand="block" size="default" (click)="history()">History</ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-button title="log in as admin" expand="block" size="default" color="light" (click)="adminLogin()">Admin Login</ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button title="view past photos of all users" expand="block" size="default" color="light" [disabled]="!admin" (click)="adminList()">Admin - Photo List</ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button title="edit past photo information" expand="block" size="default" color="light" [disabled]="!admin" (click)="adminInfo()">Admin - Update Photo Info</ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button title="filter past photos" expand="block" size="default" color="light" [disabled]="!admin" (click)="adminSearch()">Admin - Search Filter</ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-button title="use machine learning model" expand="block" size="default" color="tertiary" (click)="predictor()">Predict Oil Content</ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-button expand="block" size="default" (click)="logout()">Log Out</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

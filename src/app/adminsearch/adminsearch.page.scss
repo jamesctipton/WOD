@@ -1,0 +1,26 @@
+#searchbox {
+    align-items: center;
+}
+
+.searchinput {
+    width: 80%;
+    margin-right: auto;
+    margin-left: auto;
+    border: 1px solid gray;
+}
+
+#searchbuttons {
+    width: 20%;
+    margin: auto;
+    display: block;
+    margin-bottom: 10px;
+}
+
+#searchbox ul {
+    display: block;
+}
+
+#zero-items {
+    text-align: center;
+    font-size: large;
+}

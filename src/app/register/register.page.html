@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>register</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div id="login-container">
+    <ion-card id="login-card">
+      <ion-card-header>
+        <ion-card-title>Register</ion-card-title>
+      </ion-card-header>
+    
+      <ion-card-content>
+        <ion-input id="user" placeholder="Username"></ion-input>
+        <ion-input id="pass" placeholder="Password" type="password"></ion-input>
+        <ion-input id="email" placeholder="Email Address"></ion-input>
+        <ion-input id="name" placeholder="Name" (keyup.enter)="submit()"></ion-input>
+        <ion-button expand="block" (click)="submit()">Register</ion-button>
+        <ion-button expand="block" color="medium" (click)="goHome()">Back</ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>
+

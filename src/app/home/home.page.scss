@@ -1,0 +1,38 @@
+#login-container {
+  text-align: center;
+  
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+#login-container strong {
+  font-size: 20px;
+  line-height: 26px;
+}
+
+#login-card {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 500px;
+  height: 30%;
+}
+
+ion-input {
+  margin-left: auto;
+  margin-right: auto;
+
+  border: 2px solid black;
+  margin-top: -2px;
+  width: 80%;
+}
+
+#pass {
+  margin-bottom: 2%;
+}
+
+ion-card ion-item ion-button {
+  width: 100%;
+}

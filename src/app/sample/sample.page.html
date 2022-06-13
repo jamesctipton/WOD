@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Sample #{{ datum.id }}</ion-title>
+  </ion-toolbar>
+
+  <script 
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyADN78y8jEG63ImOZGwhk7JXeQcnyaJfYI&callback=initMap"
+      async defer
+    ></script>
+  <script src="https://unpkg.com/@googlemaps/js-api-loader@1.0.0/dist/index.min.js"></script>
+
+</ion-header>
+
+<ion-content style="text-align: center;">
+  <ion-button expand="default" color="medium" (click)="back()">Back</ion-button>
+  <br>
+  <img
+        [src]="datum.path"
+        alt="img"
+        class="detail-img"
+  >
+
+  <div id="img-info">
+    <li style="list-style: none; font-size: large;">
+      <ul>Date: {{ datum.date }}</ul>
+      <ul>Result: {{ datum.result }}</ul>
+      <ul>Notes: {{ datum.notes }}</ul>
+      <ul>Tags: {{ datum.tags }}</ul>
+    </li>
+  </div>
+
+  <div id="map"></div>
+
+</ion-content>

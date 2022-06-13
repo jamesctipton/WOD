@@ -1,0 +1,51 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>adminsearch</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-button expand="default" color="medium" (click)="back()">Back</ion-button>
+
+  <ion-card>
+    <pre>  Search By:</pre>
+    <li id="searchbox" style="list-style: none;">
+      <ul>Geo:<ion-input class="searchinput" id="geo" placeholder="search by geo"></ion-input></ul>
+      <ul>Notes:<ion-input class="searchinput" id="notes" placeholder="search by notes"></ion-input></ul>
+      <ul>Tags:<ion-input class="searchinput" id="tags" placeholder="search by tags"></ion-input></ul>
+    </li>
+    <div id="searchbuttons">
+      <ion-button expand="default" (click)="search()">Search</ion-button>
+      <ion-button expand="default" color="medium" (click)="reset()">Reset</ion-button>
+    </div>
+  </ion-card>
+
+  <ion-list id="list-element" style="z-index: 1000;">
+    <ion-item 
+      class="clickable ion-activatable history-item"
+      *ngFor="let datum of search_indexes"
+      (click)="detail(datum.id)">
+      <img
+        [src]="datum.path"
+        alt="img"
+        class="water-img">
+        <span style="margin:4px;"> id: {{ datum.id }}</span>
+        <li>
+          <ul>gps: {{ datum.gps }}</ul>
+          <ul>date: {{ datum.date }}</ul>
+          <ul>result: {{ datum.result }}</ul>
+          <ul>notes: {{ datum.notes }}</ul>
+          <ul>tags: {{ datum.tags }}</ul>
+        </li>
+    </ion-item>
+  </ion-list>
+
+  <div hidden id="zero-items" style="z-index: -1000;"></div>
+
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+    <ion-infinite-scroll-content
+      loadingSpinner="bubbles"
+      loadingText="Loading more data...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>

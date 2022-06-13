@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>History</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-button expand="default" color="medium" (click)="back()">Back</ion-button>
+
+  <ion-list id="list-element" style="z-index: 1000;">
+    <ion-item 
+      class="clickable ion-activatable history-item"
+      *ngFor="let datum of data"
+      (click)="detail(datum.id)">
+      <img
+        [src]="datum.path"
+        alt="img"
+        class="water-img">
+        <span style="margin:4px;"> id: {{ datum.id }}</span>
+        <pre>
+  gps: {{ datum.gps }}
+  date: {{ datum.date }}
+  result: {{ datum.result }}
+  notes: {{ datum.notes }}
+  tags: {{ datum.tags }}
+        </pre>
+    </ion-item>
+  </ion-list>
+
+  <div hidden id="zero-items" style="z-index: -1000;"></div>
+
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+    <ion-infinite-scroll-content
+      loadingSpinner="bubbles"
+      loadingText="Loading more data...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>

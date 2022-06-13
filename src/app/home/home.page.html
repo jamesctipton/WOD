@@ -1,0 +1,31 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title style="text-align: center;">
+      Oilix
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Oilix</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div id="login-container">
+    <ion-card id="login-card">
+      <ion-card-header>
+        <ion-card-title>Log In</ion-card-title>
+      </ion-card-header>
+    
+      <ion-card-content>
+        <ion-input id="user" placeholder="Username"></ion-input>
+        <ion-input id="pass" placeholder="Password" type="password" (keyup.enter)="login()"></ion-input>
+        <ion-button expand="block" (click)="login()">Log In</ion-button>
+        <ion-button size="default" color="medium" (click)="register()">Register</ion-button>
+        <ion-button size="default" color="medium" (click)="resetPass()">Forgot Password?</ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

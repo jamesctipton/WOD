@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>admininfo</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-button expand="default" color="medium" (click)="back()">Back</ion-button>
+    <ion-button expand="default" (click)="update()">Update</ion-button>
+  
+    <ion-list id="list-element" style="z-index: 1000;">
+      <ion-item 
+        class="clickable ion-activatable history-item"
+        *ngFor="let datum of data">
+        <img
+          [src]="datum.path"
+          alt="img"
+          class="water-img">
+          <span style="margin:4px;"> id: {{ datum.id }}</span>
+          <li>
+            <ul style="display: inline-block; padding-right: 10px;">gps: {{ datum.gps }}</ul><ion-button (click)="changeGPS(datum.id)">Change Location</ion-button>
+            <ul>date: {{ datum.date }}</ul>
+            <ul>result: {{ datum.result }}</ul>
+            <ul>notes: <ion-input class="notes" value="{{ datum.notes }}" (change)="updated_append($event, 'notes', datum.id)"></ion-input></ul>
+            <ul>tags: <ion-input class="tags" value="{{ datum.tags }}" (change)="updated_append($event, 'tags', datum.id)"></ion-input></ul>
+          </li>
+      </ion-item>
+    </ion-list>
+  
+    <div hidden id="zero-items" style="z-index: -1000;"></div>
+  
+    <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+      <ion-infinite-scroll-content
+        loadingSpinner="bubbles"
+        loadingText="Loading more data...">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+</ion-content>
