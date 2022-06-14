@@ -3,6 +3,14 @@
 
 /** Ionic CSS Variables **/
 :root {
+
+  // font stuff
+  // --ion-font-family: 'Roboto';
+  // font-family: 'Roboto'!important;
+  --ion-font-family: 'Monsterrat'!important;
+  font-family: 'Monsterrat'!important;
+
+  // COLORS
   /** primary **/
   --ion-color-primary: #3880ff;
   --ion-color-primary-rgb: 56, 128, 255;
@@ -153,6 +161,7 @@
    */
 
   .ios body {
+
     --ion-background-color: #000000;
     --ion-background-color-rgb: 0,0,0;
 
@@ -190,6 +199,9 @@
     --ion-toolbar-border-color: var(--ion-color-step-250);
   }
 
+  .ios ion-button {
+    text-transform: uppercase;
+  }
 
   /*
    * Material Design Dark Theme

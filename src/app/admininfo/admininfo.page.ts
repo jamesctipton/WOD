@@ -62,14 +62,13 @@ export class AdmininfoPage implements OnInit {
           }
         });
         this.data = this.data.concat(b);
-        console.log(this.data);
       });
     }
   }
 
   back() {
     if(this.updated.length > 0) {
-      if(window.confirm("You have unsaved updates!")) {
+      if(window.confirm("You have unsaved updates!\nAny unsaved updates may not persist.")) {
         this.router.navigate(['menu']);
       }
     }
@@ -88,8 +87,8 @@ export class AdmininfoPage implements OnInit {
       this.storage.getItem(id).then((val) => {
         item = val;
 
-        item.notes = (<HTMLInputElement>(document.getElementsByClassName("notes"))[id]).value;
-        item.tags = (<HTMLInputElement>(document.getElementsByClassName("tags"))[id]).value;
+        item.notes = (<HTMLInputElement>(document.getElementsByClassName("notes"))[parseInt(id)-1]).value;
+        item.tags = (<HTMLInputElement>(document.getElementsByClassName("tags"))[parseInt(id)-1]).value;
 
         try {
           // this.storage.removeItem(item.id);
@@ -104,27 +103,28 @@ export class AdmininfoPage implements OnInit {
           }
         }
       });
-      if(success) {
-        // remove everything from updated once its done
-        this.updated = [];
-        alert("Updated Successfully.");
-      }
     });
+
+    if(success) {
+      // remove everything from updated once its done
+      this.updated = [];
+      alert("Updated Successfully.");
+    }
   }
 
   // figure out which element got appended and add it to an array for later use
   updated_append(e, source, id) {
     // source required to figure out which element the update request comes from
     if(source == 'notes') {
-    (<HTMLInputElement>(document.getElementsByClassName("notes"))[id]).value = e.target.value;
+    (<HTMLInputElement>(document.getElementsByClassName("notes"))[id-1]).value = e.target.value;
     }
     if(source == 'tags') {
-      (<HTMLInputElement>(document.getElementsByClassName("tags"))[id]).value = e.target.value;
+      (<HTMLInputElement>(document.getElementsByClassName("tags"))[id-1]).value = e.target.value;
     }
 
     // update of AdminInfoPage data attribute as well as updating the live HTML
-    this.data[id].notes = (<HTMLInputElement>(document.getElementsByClassName("notes"))[id]).value;
-    this.data[id].tags = (<HTMLInputElement>(document.getElementsByClassName("tags"))[id]).value;
+    this.data[parseInt(id)-1].notes = (<HTMLInputElement>(document.getElementsByClassName("notes"))[parseInt(id)-1]).value;
+    this.data[parseInt(id)-1].tags = (<HTMLInputElement>(document.getElementsByClassName("tags"))[parseInt(id)-1]).value;
 
     // push to updated array
     this.updated.push(id);

@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { HttpParams, HttpHeaders, HttpClient, HttpResponse } from '@angular/common/http';
 import { StorageService } from '../storage.service';
 import { CookieService } from '../cookie.service';
+import { User } from '../user';
 
 @Component({
   selector: 'app-home',
@@ -17,6 +18,8 @@ export class HomePage implements OnInit {
     private storage: StorageService,
     private cookie: CookieService
   ) {}
+
+  user: User;
 
   ngOnInit() {
   }
@@ -40,6 +43,12 @@ export class HomePage implements OnInit {
       console.log(response);
       if(response['status'] == 0) {
 
+        // clear previous user (if any), set current user data to retrieve later when necessary
+        this.storage.setItem('user', '');
+        response['msg']['admin'] = false;
+        this.user = response['msg'];
+        this.storage.setItem('user', this.user);
+        //used for auth guard
         this.storage.setItem('loggedIn', true);
         this.router.navigate(['/menu']);
         // test to see if account is admin as well.
@@ -48,8 +57,12 @@ export class HomePage implements OnInit {
         .subscribe(response => {
             console.log(response);
             if(response['status'] == 0) {
+              // cookie not necessary this is mostly for testing not for security
               this.cookie.setCookie("admin", "admin123", 30, "");
               this.storage.setItem('adminLog', true);
+
+              this.user.admin = true;
+              this.storage.setItem('user', this.user);
             }
             else {
               alert(response['msg']);

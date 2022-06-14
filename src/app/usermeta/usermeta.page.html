@@ -1,9 +1,19 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>usermeta</ion-title>
+    <ion-title>User: {{ user.name }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <ion-button expand="default" color="medium" (click)="back()">Back</ion-button>
+  <ion-card>
+    <ion-card-header>
+      Hello, {{ user.name }}
+    </ion-card-header>
+    <ion-card-content>
+      <div>Username: <span style="color: white;">{{ user.username }}</span></div>
+      <div>Email: <span style="color: white;">{{ user.email }}</span></div>
+      <div>Admin: <span [ngStyle]="{ 'color' : (user.admin) ? 'green' : 'red' }">{{ user.admin }}</span></div>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

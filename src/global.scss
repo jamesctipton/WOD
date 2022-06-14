@@ -28,20 +28,17 @@
 // angular mats
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
-#filelist, #filelist li {
-    margin: 0;
-    padding: 0;
-    list-style: none;
+@font-face {
+    font-family: 'Monsterrat';
+    font-style: normal;
+    font-weight: 700;
+    src: url('./theme/fonts/Montserrat/static/Montserrat-Bold.ttf');
+    src: url('./theme/fonts/Montserrat/Montserrat-VariableFont_wght.ttf');
 }
 
-.water-img {
-    width: 20%;
-}
-
-.detail-img {
-    width: 80%;
-}
-
-.history-item img {
-    margin: 10px;
+@font-face {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: normal;
+    src: url('./theme/fonts/Roboto/Roboto-Medium.ttf');
 }
