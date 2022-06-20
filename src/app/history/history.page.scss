@@ -10,3 +10,20 @@
 .water-img {
     width: 20%;
 }
+
+// for details
+@font-face {
+    font-family: 'Noto';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../../theme/fonts/Noto_Sans_Mono/NotoSansMono-VariableFont_wdth,wght.ttf');
+}
+
+.item-info ul {
+    font-family: 'Noto';
+    font-weight: 900;
+}
+
+.item-info span {
+    font-weight: normal;
+}

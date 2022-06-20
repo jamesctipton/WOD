@@ -32,9 +32,7 @@ export class HomePage implements OnInit {
 
     let options = {
       headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded'),
-      // .set('Access-Control-Allow-Origin','null'),
-      // withCredentials: true,
-      Origin: 'https://wateroil.itongue.cn:80'
+      withCredentials: true,
     }
 
     this.http
@@ -50,23 +48,21 @@ export class HomePage implements OnInit {
         this.storage.setItem('user', this.user);
         //used for auth guard
         this.storage.setItem('loggedIn', true);
+        this.storage.setItem('adminLog', false);
         this.router.navigate(['/menu']);
         // test to see if account is admin as well.
         this.http
         .post('https://wateroil.itongue.cn/adminlogin', params , options)
         .subscribe(response => {
-            console.log(response);
-            if(response['status'] == 0) {
-              // cookie not necessary this is mostly for testing not for security
-              this.cookie.setCookie("admin", "admin123", 30, "");
-              this.storage.setItem('adminLog', true);
+          console.log(response);
+          if(response['status'] == 0) {
+            // cookie not necessary this is mostly for testing not for security
+            this.cookie.setCookie("admin", "admin123", 30, "");
+            this.storage.setItem('adminLog', true);
 
-              this.user.admin = true;
-              this.storage.setItem('user', this.user);
-            }
-            else {
-              alert(response['msg']);
-            }
+            this.user.admin = true;
+            this.storage.setItem('user', this.user);
+          }
         });
       }
       else {

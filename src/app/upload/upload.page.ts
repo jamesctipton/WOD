@@ -126,7 +126,8 @@ export class UploadPage implements OnInit {
         window.alert("GPS field must be filled.\nAllow current location to autofill.");
         return;
     }
-
+    
+    const fileForm = (<HTMLFormElement>(document.getElementById("fileForm")));
     const fileUpload = this.fileUpload.nativeElement;
 
     fileUpload.onchange = (evt) => {
@@ -136,7 +137,7 @@ export class UploadPage implements OnInit {
       (<HTMLInputElement>document.getElementById("progress")).innerHTML = "File Uploading...";
 
       for(var j=0; j < fileUpload.files.length; j++) {
-        const file = fileUpload.files[j];
+        const file = fileUpload.files.item(j);
         const reader = new FileReader();
 
         var self = this; //outside angular 'this' => can use self within anonymous functions
@@ -175,12 +176,17 @@ export class UploadPage implements OnInit {
           // set key = id, value = data in storage
           self.storage.setItem(self.storage.length.toString(), self.data);
 
+          const formData = new FormData(fileForm);
+          formData.append('gps', self.data.gps);
+          formData.append('photo', file);
+          formData.append('notes', self.data.notes); 
+          file.inProgress = true;
+          for(const pair of formData.entries()) {
+            console.log(`${pair[0]}, ${pair[1]}`);
+          }
+          console.log(file);
 
-          // const formData = new FormData();  
-          // formData.append('file', file.data);  
-          // file.inProgress = true;
-
-          self.uploadService.upload(self.data).pipe(  
+          self.uploadService.upload(formData).pipe(  
             map(event => {  
               switch (event.type) {  
                 case HttpEventType.UploadProgress:  
@@ -198,8 +204,6 @@ export class UploadPage implements OnInit {
                 console.log(event.body);  
               }  
             });  
-
-
 
           (<HTMLInputElement>document.getElementById("success")).innerHTML += "<ul>" + file.name + "</ul>";
         }

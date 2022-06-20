@@ -34,3 +34,14 @@
 ion-spinner {
     transform: scale(2);
 }
+
+@font-face {
+    font-family: 'Noto';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../../theme/fonts/Noto_Sans_Mono/NotoSansMono-VariableFont_wdth,wght.ttf');
+}
+
+#gps {
+    font-family: 'Noto', arial;
+}

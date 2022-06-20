@@ -103,8 +103,13 @@ export class SamplePage implements OnInit {
 // get geo data from current location           - yes
 // update upload page to handle multiple images - yes
       // display files uploaded better          - 
-// add all fields to admin info editing         - 
-      // open map and drop pin?                 - 
+// add all fields to admin info editing         - yes
+      // open map and drop pin?                 - still needed
 // interface camera maybe                       - 
 
-// should i add a button to upload to server separately? Or on the backend have it update sometimes
+
+// search twice in a row
+// search empty strings
+
+// raleway questrial jost
+// change upload page gps font

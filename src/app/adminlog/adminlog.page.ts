@@ -4,6 +4,7 @@ import { CookieService } from '../cookie.service';
 import { Router } from '@angular/router';
 import { HttpParams, HttpHeaders, HttpClient, HttpResponse } from '@angular/common/http';
 import { StorageService } from '../storage.service';
+import { User } from '../user';
 
 @Component({
   selector: 'app-adminlog',
@@ -11,6 +12,8 @@ import { StorageService } from '../storage.service';
   styleUrls: ['./adminlog.page.scss'],
 })
 export class AdminlogPage implements OnInit {
+
+  user: User;
 
   constructor(
     private router: Router,
@@ -43,6 +46,14 @@ export class AdminlogPage implements OnInit {
     .subscribe(response => {
         console.log(response);
         if(response['status'] == 0) {
+          // update user's admin status
+          this.storage.getItem('user').then((val) => {
+            this.user = val;
+            this.user.admin = true;
+            this.storage.setItem('user', this.user);
+          });
+          
+          // cookie not necessary this is mostly for testing not for security
           this.cookie.setCookie("admin", "admin123", 30, "");
           this.storage.setItem('adminLog', true);
           this.router.navigateByUrl('/menu');

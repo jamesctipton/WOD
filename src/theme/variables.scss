@@ -7,8 +7,12 @@
   // font stuff
   // --ion-font-family: 'Roboto';
   // font-family: 'Roboto'!important;
-  --ion-font-family: 'Monsterrat'!important;
-  font-family: 'Monsterrat'!important;
+  // --ion-font-family: 'Monsterrat'!important;
+  // font-family: 'Monsterrat'!important;
+  // --ion-font-family: 'Poppins';
+  // font-family: 'Poppins'!important;
+  --ion-font-family: 'Raleway';
+  font-family: 'Raleway'!important;
 
   // COLORS
   /** primary **/
@@ -91,6 +95,7 @@
    */
 
   body {
+    
     --ion-color-primary: #428cff;
     --ion-color-primary-rgb: 66,140,255;
     --ion-color-primary-contrast: #ffffff;
@@ -199,10 +204,6 @@
     --ion-toolbar-border-color: var(--ion-color-step-250);
   }
 
-  .ios ion-button {
-    text-transform: uppercase;
-  }
-
   /*
    * Material Design Dark Theme
    * -------------------------------------------
@@ -244,5 +245,10 @@
     --ion-tab-bar-background: #1f1f1f;
 
     --ion-card-background: #1e1e1e;
+  }
+
+  // my overrides
+  ion-button {
+    text-transform: none;
   }
 }

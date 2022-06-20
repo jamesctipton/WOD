@@ -32,7 +32,9 @@
       <br>
 
       <ion-button size="default" (click)="onChange()">Upload</ion-button>
-      <input type="file" #fileUpload id="fileUpload" name="fileUpload" multiple="multiple" accept="image/*" style="display:none;">
+      <form id="fileForm" enctype="multipart/form-data">
+        <input type="file" #fileUpload id="fileUpload" name="fileUpload" multiple="multiple" accept="image/*" style="display:none;">
+      </form>
       <!-- <div id="success">&nbsp;&nbsp;No file</div> -->
       <li id="success" style="list-style: none;">
         <!-- successfully uploaded files go in <ul>'s here -->

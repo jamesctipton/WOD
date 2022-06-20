@@ -15,19 +15,13 @@ export class UploadserviceService {
   ) { }
 
   public upload(data) {
-    let options = {
-      headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded'),
-      // Origin: 'http://47.100.22.28',
-      reportProgress: true,
-      observe: 'events',
-      // withCredentials: true,
-    }
 
     return this.httpClient.post<any>(this.SERVER_URL, data, {
-      headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded'),
+      // headers: new HttpHeaders().set('Content-Type', 'multipart/form-data; boundary=???'), // it doesnt like this for some reason
+      headers: new HttpHeaders().delete('Content-Type'),
       reportProgress: true,
       observe: 'events',
-      // withCredentials: true,
+      withCredentials: true,
     });
   }
 

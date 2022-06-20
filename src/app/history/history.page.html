@@ -17,13 +17,13 @@
         alt="img"
         class="water-img">
         <span style="margin:4px;"> id: {{ datum.id }}</span>
-        <pre>
-  gps: {{ datum.gps }}
-  date: {{ datum.date }}
-  result: {{ datum.result }}
-  notes: {{ datum.notes }}
-  tags: {{ datum.tags }}
-        </pre>
+        <li class="item-info" style="list-style: none;">
+          <ul>gps: <span>{{ datum.gps }}</span></ul>
+          <ul>date: <span>{{ datum.date }}</span></ul>
+          <ul>result: <span>{{ datum.result }}</span></ul>
+          <ul>notes: <span>{{ datum.notes }}</span></ul>
+          <ul>tags: <span>{{ datum.tags }}</span></ul>
+        </li>
     </ion-item>
   </ion-list>
 
