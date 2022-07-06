@@ -14,3 +14,13 @@ ion-title {
     margin-top: 1.5%;
     text-align: center;
 }
+
+ion-grid {
+    height: 100%;
+    ion-row {
+        height: 33.33%;
+        ion-button {
+            height: 90%;
+        }
+    }
+}

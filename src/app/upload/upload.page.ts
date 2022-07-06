@@ -1,8 +1,5 @@
 import { Component, Injectable, OnInit, SkipSelf } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpClientModule, HttpHeaders } from '@angular/common/http';
-import { HttpClient } from '@angular/common/http';
-import { identity, Observable } from 'rxjs';
 import { map, filter, switchMap, catchError } from 'rxjs/operators';
 
 import { ViewChild, ElementRef  } from '@angular/core';
@@ -14,6 +11,7 @@ import { Data } from '../data';
 import { DatePipe } from '@angular/common';
 import { StorageService } from '../storage.service';
 import { AuthGuard } from '../auth.guard';
+import { Globals } from '../globals';
 
 declare const mapkit: any;
 
@@ -21,7 +19,7 @@ declare const mapkit: any;
   selector: 'app-upload',
   templateUrl: './upload.page.html',
   styleUrls: ['./upload.page.scss'],
-  providers: [AuthGuard]
+  providers: [AuthGuard, Globals]
 })
 
 @Injectable({
@@ -35,10 +33,8 @@ export class UploadPage implements OnInit {
   constructor(
     private router: Router,
     private uploadService: UploadserviceService,
-    private storage: StorageService
-  ) { 
-    this.initStorage();
-  }
+    public global: Globals,
+  ) { }
 
   lat: number = NaN;
   lng: number = NaN;
@@ -70,10 +66,6 @@ export class UploadPage implements OnInit {
     });
   }
 
-  async initStorage() {
-    await this.storage.init();
-  }
-
   data: Data = {
     id : '',
     gps : '',
@@ -87,38 +79,6 @@ export class UploadPage implements OnInit {
   back() {
     this.router.navigate(['menu']);
   }
-
-//   uploadFile(file) {
-//     const formData = new FormData();  
-//     formData.append('file', file.data);  
-//     file.inProgress = true;
-
-//     this.uploadService.upload(formData).pipe(  
-//       map(event => {  
-//         switch (event.type) {  
-//           case HttpEventType.UploadProgress:  
-//             file.progress = Math.round(event.loaded * 100 / event.total);  
-//             break;  
-//           case HttpEventType.Response:  
-//             return event;  
-//         }  
-//       }),  
-//       catchError((error: HttpErrorResponse) => {  
-//         file.inProgress = false;  
-//         return of(`${file.data.name} upload failed.`);  
-//       })).subscribe((event: any) => {  
-//         if (typeof (event) === 'object') {  
-//           console.log(event.body);  
-//         }  
-//       });  
-//   }
-
-//   private uploadFiles() {  
-//     this.fileUpload.nativeElement.value = '';  
-//     this.files.forEach(file => {  
-//       this.uploadFile(file); 
-//     });  
-//   }
 
   onChange() {
 
@@ -158,33 +118,11 @@ export class UploadPage implements OnInit {
           const now = Date.now();
           self.data.date = pipe.transform(now, 'short');
 
-          // length update
-          if(self.storage.length == NaN) {
-            // if storage has not been used yet
-            self.storage.length = 0;
-          }
-          else if(self.storage.length == 0) {
-            self.storage.length = 1;
-          }
-          else {
-            self.storage.length += 1;
-          }
-
-          // set data id number
-          self.data.id = self.storage.length.toString();
-          
-          // set key = id, value = data in storage
-          self.storage.setItem(self.storage.length.toString(), self.data);
-
           const formData = new FormData(fileForm);
           formData.append('gps', self.data.gps);
           formData.append('photo', file);
           formData.append('notes', self.data.notes); 
           file.inProgress = true;
-          for(const pair of formData.entries()) {
-            console.log(`${pair[0]}, ${pair[1]}`);
-          }
-          console.log(file);
 
           self.uploadService.upload(formData).pipe(  
             map(event => {  
@@ -221,18 +159,5 @@ export class UploadPage implements OnInit {
     // artificial click for the file upload element => starts the onchange function
     fileUpload.click();
   }
-
-  // onClick() {  
-  //   const fileUpload = this.fileUpload.nativeElement;
-  //   fileUpload.onchange = () => {  
-  //     for (let index = 0; index < fileUpload.files.length; index++)  
-  //     {  
-  //     const file = fileUpload.files[index];  
-  //     this.files.push({ data: file, inProgress: false, progress: 0});  
-  //     }  
-  //       this.uploadFiles();  
-  //   };  
-  //   fileUpload.click();  
-  // }
 
 }

@@ -4,16 +4,19 @@ import { Router } from '@angular/router';
 import { AngularDelegate } from '@ionic/angular';
 import { RegisterPageModule } from './register.module';
 import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
+import { Globals } from '../globals';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.page.html',
   styleUrls: ['./register.page.scss'],
+  providers: [ Globals ]
 })
 export class RegisterPage implements OnInit {
 
   constructor(
     private router: Router,
+    public global: Globals,
     private http: HttpClient
   ) {  }
 

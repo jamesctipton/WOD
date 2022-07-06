@@ -21,18 +21,18 @@
             <ul style="display: inline-block; padding-right: 10px;">gps: {{ datum.gps }}</ul><ion-button (click)="changeGPS(datum.id)">Change Location</ion-button>
             <ul>date: {{ datum.date }}</ul>
             <ul>result: {{ datum.result }}</ul>
-            <ul>notes: <ion-input class="notes" value="{{ datum.notes }}" (change)="updated_append($event, 'notes', datum.id)"></ion-input></ul>
-            <ul>tags: <ion-input class="tags" value="{{ datum.tags }}" (change)="updated_append($event, 'tags', datum.id)"></ion-input></ul>
+            <ul>notes: <ion-input [id]="'notes' + datum.id" class="notes" value="{{ datum.notes }}" (change)="updated_append($event, 'notes', datum.id)"></ion-input></ul>
+            <ul>tags: <ion-input [id]="'tags' + datum.id" class="tags" value="{{ datum.tags }}" (change)="updated_append($event, 'tags', datum.id)"></ion-input></ul>
           </li>
       </ion-item>
     </ion-list>
   
     <div hidden id="zero-items" style="z-index: -1000;"></div>
   
-    <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+    <!-- <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
       <ion-infinite-scroll-content
         loadingSpinner="bubbles"
         loadingText="Loading more data...">
       </ion-infinite-scroll-content>
-    </ion-infinite-scroll>
+    </ion-infinite-scroll> -->
 </ion-content>

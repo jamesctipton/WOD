@@ -4,17 +4,20 @@ import { HttpParams, HttpHeaders, HttpClient, HttpResponse } from '@angular/comm
 import { StorageService } from '../storage.service';
 import { CookieService } from '../cookie.service';
 import { User } from '../user';
+import { Globals } from '../globals';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
+  providers: [ Globals ]
 })
 export class HomePage implements OnInit {
 
   constructor(
     private router: Router,
     private http: HttpClient,
+    public global: Globals,
     private storage: StorageService,
     private cookie: CookieService
   ) {}
@@ -28,15 +31,15 @@ export class HomePage implements OnInit {
     var user_text = (<HTMLInputElement>document.getElementById("user")).value;
     var pass_text = (<HTMLInputElement>document.getElementById("pass")).value;
 
-    let params = 'username='+ user_text +'&password='+ pass_text
+    let params = 'username='+ user_text +'&password='+ pass_text;
 
     let options = {
       headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded'),
       withCredentials: true,
-    }
+    };
 
     this.http
-    .post('https://wateroil.itongue.cn/login', params , options)
+    .post(this.global.url + '/login', params , options)
     .subscribe(response => {
       console.log(response);
       if(response['status'] == 0) {
@@ -56,12 +59,9 @@ export class HomePage implements OnInit {
         .subscribe(response => {
           console.log(response);
           if(response['status'] == 0) {
-            // cookie not necessary this is mostly for testing not for security
-            this.cookie.setCookie("admin", "admin123", 30, "");
-            this.storage.setItem('adminLog', true);
-
             this.user.admin = true;
             this.storage.setItem('user', this.user);
+            this.storage.setItem('adminLog', true);
           }
         });
       }

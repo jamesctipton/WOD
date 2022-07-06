@@ -14,9 +14,9 @@
       (click)="detail(datum.id)">
       <img
         [src]="datum.path"
-        alt="img"
+        alt="img {{ datum.id }}"
         class="water-img">
-        <span style="margin:4px;"> id: {{ datum.id }}</span>
+        <span style="margin:4px;"> ID: {{ datum.id }}</span>
         <li class="item-info" style="list-style: none;">
           <ul>gps: <span>{{ datum.gps }}</span></ul>
           <ul>date: <span>{{ datum.date }}</span></ul>
@@ -29,10 +29,10 @@
 
   <div hidden id="zero-items" style="z-index: -1000;"></div>
 
-  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+  <!-- <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
     <ion-infinite-scroll-content
       loadingSpinner="bubbles"
       loadingText="Loading more data...">
     </ion-infinite-scroll-content>
-  </ion-infinite-scroll>
+  </ion-infinite-scroll> -->
 </ion-content>

@@ -1,16 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
+import { Globals } from '../globals';
 
 @Component({
   selector: 'app-resetpass',
   templateUrl: './resetpass.page.html',
   styleUrls: ['./resetpass.page.scss'],
+  providers: [ Globals ]
 })
 export class ResetpassPage implements OnInit {
 
   constructor(
     private router: Router,
+    public global: Globals,
     private http: HttpClient
   ) { }
 

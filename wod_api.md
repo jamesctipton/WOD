@@ -231,7 +231,7 @@ mindate: string
 maxdate: string
 ```
 
-* Time format: 2021-11-11
+* Time format: 2021-11-30
 
 * GPS should be decimal degrees. https://en.wikipedia.org/wiki/Decimal_degrees (38° 53′ 23″ N, 77° 00′ 32″ W) ==> (38.8897,-77.0089)
 

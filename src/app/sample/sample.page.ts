@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap, Data } from '@angular/router';
-import { StorageService } from '../storage.service';
+import { Globals } from '../globals';
 
 declare const mapkit: any;
 
@@ -8,20 +8,17 @@ declare const mapkit: any;
   selector: 'app-sample',
   templateUrl: './sample.page.html',
   styleUrls: ['./sample.page.scss'],
+  providers: [ Globals ]
 })
 export class SamplePage implements OnInit {
   
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private storage: StorageService
-  ) { 
-    this.initStorage();  
+    public global: Globals,
+    ) { 
    }
 
-  async initStorage() {
-    await this.storage.init();
-  }
 
   datum: Data = {
     id : '',
@@ -38,7 +35,7 @@ export class SamplePage implements OnInit {
   ngOnInit() {
 
     // initialize the mapkit API before anything
-    const tokenID = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlhBVjVZQzVTUFYifQ.eyJpc3MiOiJaQTVSOVg4NUI1IiwiaWF0IjoxNjUzMzY1NTE5LCJleHAiOjE2NzI0NDQ4MDB9.al1bW4MPG9yom_cEZh13dDyAWnrmuU2QsUo-8_ziE9I-iqydqKBcm5GEbYNgfPSPjaXGsrR4nmlBosbPpgfvxQ";  
+    const tokenID = this.global.token;
       mapkit.init({     
         authorizationCallback: function(done) {         
           done(tokenID);     
@@ -48,13 +45,8 @@ export class SamplePage implements OnInit {
     var id = this.route.snapshot.paramMap.get('id');
     // grab source that we routed from to get to the sample page for the back button
     this.source = this.route.snapshot.paramMap.get('source');
-    
-    // grab ID'th index from ionic storage
-    this.storage.getItem(id).then((val) => {
-      
-      this.datum = val;
-      this.mapInit();
-    });
+    // grab data from source page
+    this.datum = JSON.parse(this.route.snapshot.paramMap.get('datum'));
   }
 
   mapInit() {
@@ -95,21 +87,13 @@ export class SamplePage implements OnInit {
 
 }
 
-// black background                             - yes
-// working title: oilix?                        - sure
 // ui things                                    - 
 // predictor tab                                - no backend
-// server functionality                         - 
-// get geo data from current location           - yes
 // update upload page to handle multiple images - yes
       // display files uploaded better          - 
 // add all fields to admin info editing         - yes
       // open map and drop pin?                 - still needed
-// interface camera maybe                       - 
 
 
 // search twice in a row
 // search empty strings
-
-// raleway questrial jost
-// change upload page gps font

@@ -8,11 +8,32 @@
   <ion-button expand="default" color="medium" (click)="back()">Back</ion-button>
 
   <ion-card>
-    <pre>  Search By:</pre>
+    <div id="search-by">Search By:</div>
     <li id="searchbox" style="list-style: none;">
-      <ul>Geo:<ion-input class="searchinput" id="geo" placeholder="search by geo"></ion-input></ul>
-      <ul>Notes:<ion-input class="searchinput" id="notes" placeholder="search by notes"></ion-input></ul>
-      <ul>Tags:<ion-input class="searchinput" id="tags" placeholder="search by tags"></ion-input></ul>
+      <ul>
+        <div class="label">Location:</div>
+        <div class="input-field">
+          <ion-input class="searchinput" id="geo" placeholder="GPS: Lat, Long"></ion-input>
+          <ion-input name="location" class="searchinput" id="radius" placeholder="Radius from location"></ion-input>
+          <ion-select id="unit" class="searchinput" interface="popover" placeholder="Unit">
+            <ion-select-option value="m">m (meters)</ion-select-option>
+            <ion-select-option value="km">km (kilometers)</ion-select-option>
+            <ion-select-option value="mile">mi (miles)</ion-select-option>
+          </ion-select>
+        </div>
+      </ul>
+      <ul>
+        <div class="label">Notes:</div>
+        <div class="input-field">
+          <ion-input class="searchinput" id="notes" placeholder="search by notes"></ion-input>
+        </div>
+    </ul>
+      <ul>
+        <div class="label">Tags:</div>
+        <div class="input-field">
+          <ion-input class="searchinput" id="tags" placeholder="search by tags"></ion-input>
+        </div>
+      </ul>
     </li>
     <div id="searchbuttons">
       <ion-button expand="default" (click)="search()">Search</ion-button>
@@ -23,7 +44,7 @@
   <ion-list id="list-element" style="z-index: 1000;">
     <ion-item 
       class="clickable ion-activatable history-item"
-      *ngFor="let datum of search_indexes"
+      *ngFor="let datum of data"
       (click)="detail(datum.id)">
       <img
         [src]="datum.path"
@@ -42,10 +63,10 @@
 
   <div hidden id="zero-items" style="z-index: -1000;"></div>
 
-  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+  <!-- <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
     <ion-infinite-scroll-content
       loadingSpinner="bubbles"
       loadingText="Loading more data...">
     </ion-infinite-scroll-content>
-  </ion-infinite-scroll>
+  </ion-infinite-scroll> -->
 </ion-content>

@@ -11,28 +11,23 @@
 
   <ion-grid>
     <ion-row>
+    <!-- <ion-row *ngIf="platform.IOS || platform.ANDROID"> -->
       <ion-col>
         <ion-button title="upload an image locally" expand="block" size="default" (click)="upload()">Image Upload</ion-button>
       </ion-col>
       <ion-col>
-        <ion-button title="user meta data" expand="block" size="default" color="secondary" (click)="userMeta()">User Data</ion-button>
-      </ion-col>
-      <ion-col>
-        <ion-button title="view past photos" expand="block" size="default" (click)="history()">History</ion-button>
+        <ion-button title="view past photos" expand="block" size="default" (click)="history()">My Samples</ion-button>
       </ion-col>
     </ion-row>
-    <ion-row>
-      <ion-col>
-        <ion-button title="log in as admin" expand="block" size="default" color="light" (click)="adminLogin()">Admin Login</ion-button>
+    <ion-row class="admin">
+      <ion-col *ngIf="!(platform.IOS || platform.ANDROID)">
+        <ion-button title="view past photos of all users" mode="md" expand="block" color="primary" size="default" [disabled]="!admin" (click)="adminList()">All Entries</ion-button>
       </ion-col>
-      <ion-col>
-        <ion-button title="view past photos of all users" expand="block" size="default" color="light" [disabled]="!admin" (click)="adminList()">Admin - Photo List</ion-button>
+      <ion-col *ngIf="!(platform.IOS || platform.ANDROID)">
+        <ion-button title="edit past photo information" mode="md" expand="block" color="primary" size="default"  [disabled]="!admin" (click)="adminInfo()">Update Entries</ion-button>
       </ion-col>
-      <ion-col>
-        <ion-button title="edit past photo information" expand="block" size="default" color="light" [disabled]="!admin" (click)="adminInfo()">Admin - Update Photo Info</ion-button>
-      </ion-col>
-      <ion-col>
-        <ion-button title="filter past photos" expand="block" size="default" color="light" [disabled]="!admin" (click)="adminSearch()">Admin - Search Filter</ion-button>
+      <ion-col *ngIf="!(platform.IOS || platform.ANDROID)">
+        <ion-button title="filter past photos" mode="md" expand="block" size="default" color="primary" [disabled]="!admin" (click)="adminSearch()">Search Entries</ion-button>
       </ion-col>
     </ion-row>
     <ion-row>
@@ -42,7 +37,10 @@
     </ion-row>
     <ion-row>
       <ion-col>
-        <ion-button expand="block" size="default" (click)="logout()">Log Out</ion-button>
+        <ion-button title="user meta data" expand="block" size="default" color="secondary" (click)="userMeta()">User Profile</ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button expand="block" color="light" size="default" (click)="logout()">Log Out</ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>

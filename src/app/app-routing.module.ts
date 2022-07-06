@@ -50,11 +50,6 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'adminlog',
-    loadChildren: () => import('./adminlog/adminlog.module').then( m => m.AdminlogPageModule),
-    canActivate: [AuthGuard]
-  },
-  {
     path: 'adminlist',
     loadChildren: () => import('./adminlist/adminlist.module').then( m => m.AdminlistPageModule),
     canActivate: [AuthGuard, RoleGuard]

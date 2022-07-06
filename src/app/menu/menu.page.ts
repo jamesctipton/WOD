@@ -1,25 +1,30 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Platform } from '@angular/cdk/platform';
 import { HttpParams, HttpHeaders, HttpClient, HttpResponse } from '@angular/common/http';
 
 import { CookieService } from '../cookie.service';
 import { StorageService } from '../storage.service';
+import { Globals } from '../globals';
 
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.page.html',
   styleUrls: ['./menu.page.scss'],
+  providers: [ Globals ]
 })
 export class MenuPage implements OnInit {
 
   constructor(
     private router: Router,
     private http: HttpClient,
+    public global: Globals,
     private cookie: CookieService,
-    private storage: StorageService
+    private storage: StorageService,
+    public platform: Platform
   ) { }
 
-  admin = false;
+  admin = true;
 
   ngOnInit() {
     // this.admin = (this.cookie.getCookie("admin")) == '' ? false : true;
@@ -39,10 +44,6 @@ export class MenuPage implements OnInit {
 
   history() {
     this.router.navigate(['history']);
-  }
-
-  adminLogin() {
-    this.router.navigate(['adminlog']);
   }
 
   adminList() {

@@ -1,3 +1,10 @@
+#search-by {
+    margin-top: 2%;
+    font-family: 'Noto', arial;
+    font-weight: 900;
+    text-align: center;
+}
+
 #searchbox {
     align-items: center;
 }
@@ -17,7 +24,19 @@
 }
 
 #searchbox ul {
-    display: block;
+    display: flex;
+    justify-content: flex-start;
+    padding-left: 8px;
+    .label {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 62px;
+        text-align: right;
+    }
+    .input-field {
+        flex-grow: 7;
+    }
 }
 
 #zero-items {
@@ -31,4 +50,16 @@
 
 .history-item img {
     margin: 10px;
+}
+
+@font-face {
+    font-family: 'Noto';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../../theme/fonts/Noto_Sans_Mono/NotoSansMono-VariableFont_wdth,wght.ttf');
+}
+
+#geo, #radius {
+    font-family: 'Noto', arial;
+    font-weight: 900;
 }

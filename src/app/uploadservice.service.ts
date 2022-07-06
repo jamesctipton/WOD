@@ -1,17 +1,19 @@
 import { Injectable } from '@angular/core';
 
 import { HttpClient, HttpEvent, HttpErrorResponse, HttpHeaders } from  '@angular/common/http';  
-import { map } from  'rxjs/operators';
+import { Globals } from './globals';
+
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UploadserviceService {
 
-  SERVER_URL: string = "https://wateroil.itongue.cn/photoupload";
+  SERVER_URL: string = this.global.url + "/photoupload";
 
   constructor(
-    private httpClient: HttpClient
+    private httpClient: HttpClient,
+    public global: Globals
   ) { }
 
   public upload(data) {
