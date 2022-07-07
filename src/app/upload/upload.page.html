@@ -39,6 +39,8 @@
       <li id="success" style="list-style: none;">
         <!-- successfully uploaded files go in <ul>'s here -->
       </li>
+      <ion-progress-bar [value]="progress" [hidden]="!inProgress"></ion-progress-bar>
+      <ion-button size="default" color="success" [disabled]="!filesUploaded" (click)="submit()">Submit</ion-button>
       <br>
     </ion-item>
 

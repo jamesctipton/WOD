@@ -41,6 +41,12 @@ export class UploadPage implements OnInit {
 
   coords: string;
 
+  file: any;
+  formData: any;
+  progress: Number;
+  inProgress: boolean = false;
+  filesUploaded: boolean = false;
+
   ngOnInit(): void {
 
     (<HTMLInputElement>document.getElementById("spinner-box")).hidden = false;
@@ -97,7 +103,7 @@ export class UploadPage implements OnInit {
       (<HTMLInputElement>document.getElementById("progress")).innerHTML = "File Uploading...";
 
       for(var j=0; j < fileUpload.files.length; j++) {
-        const file = fileUpload.files.item(j);
+        this.file = fileUpload.files.item(j);
         const reader = new FileReader();
 
         var self = this; //outside angular 'this' => can use self within anonymous functions
@@ -120,34 +126,21 @@ export class UploadPage implements OnInit {
 
           const formData = new FormData(fileForm);
           formData.append('gps', self.data.gps);
-          formData.append('photo', file);
+          formData.append('photo', self.file);
           formData.append('notes', self.data.notes); 
-          file.inProgress = true;
+          self.file.inProgress = true;
+          self.inProgress = self.file.inProgress;
 
-          self.uploadService.upload(formData).pipe(  
-            map(event => {  
-              switch (event.type) {  
-                case HttpEventType.UploadProgress:  
-                  file.progress = Math.round(event.loaded * 100 / event.total);  
-                  break;  
-                case HttpEventType.Response:  
-                  return event;  
-              }  
-            }),  
-            catchError((error: HttpErrorResponse) => {  
-              file.inProgress = false;  
-              return of(`${file.data.name} upload failed.`);  
-            })).subscribe((event: any) => {  
-              if (typeof (event) === 'object') {  
-                console.log(event.body);  
-              }  
-            });  
+          self.formData = formData;
 
-          (<HTMLInputElement>document.getElementById("success")).innerHTML += "<ul>" + file.name + "</ul>";
+          (<HTMLInputElement>document.getElementById("success")).innerHTML += "<ul>" + self.file.name + "</ul>";
+          if(self.file.inProgress == 1) {
+            self.filesUploaded = true;
+          }
         }
 
-        if(file) {
-          reader.readAsDataURL(file);
+        if(this.file) {
+          reader.readAsDataURL(this.file);
         }
       }
 
@@ -158,6 +151,37 @@ export class UploadPage implements OnInit {
 
     // artificial click for the file upload element => starts the onchange function
     fileUpload.click();
+  }
+
+  submit() {
+
+    var self = this;
+    this.uploadService.upload(this.formData).pipe(  
+      map(event => {  
+        switch (event.type) {  
+          case HttpEventType.UploadProgress:  
+          self.file.progress = Math.round(event.loaded / event.total);  
+            self.progress = self.file.progress;
+            break;  
+          case HttpEventType.Response:  
+            return event;  
+        }  
+      }),  
+      catchError((error: HttpErrorResponse) => {  
+        self.file.inProgress = false;
+        self.filesUploaded = false;  
+        return of(`${self.file.data.name} upload failed.`);  
+      })).subscribe((event: any) => {  
+        if (typeof (event) === 'object') {  
+          console.log(event.body); 
+          if(event.body['status'] == 0) {
+            alert(event.body['msg']);
+            this.filesUploaded = false;
+            this.inProgress = false;
+            window.location.reload();
+          } 
+        }  
+      });  
   }
 
 }
