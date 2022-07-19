@@ -9,7 +9,6 @@ import { UploadserviceService } from  '../uploadservice.service';
 
 import { Data } from '../data';
 import { DatePipe } from '@angular/common';
-import { StorageService } from '../storage.service';
 import { AuthGuard } from '../auth.guard';
 import { Globals } from '../globals';
 
@@ -36,9 +35,6 @@ export class UploadPage implements OnInit {
     public global: Globals,
   ) { }
 
-  lat: number = NaN;
-  lng: number = NaN;
-
   coords: string;
 
   file: any;
@@ -47,14 +43,14 @@ export class UploadPage implements OnInit {
   inProgress: boolean = false;
   filesUploaded: boolean = false;
 
+  data: Data;
+
   ngOnInit(): void {
 
-    (<HTMLInputElement>document.getElementById("spinner-box")).hidden = false;
-    (<HTMLInputElement>document.getElementById("spinner-box")).style.zIndex = "1000";
-    (<HTMLInputElement>document.getElementById("progress")).innerHTML = "Getting Location...";
+    this.spinnerBoxToggle(false);
 
     // initialize the mapkit API before anything
-    const tokenID = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlhBVjVZQzVTUFYifQ.eyJpc3MiOiJaQTVSOVg4NUI1IiwiaWF0IjoxNjUzMzY1NTE5LCJleHAiOjE2NzI0NDQ4MDB9.al1bW4MPG9yom_cEZh13dDyAWnrmuU2QsUo-8_ziE9I-iqydqKBcm5GEbYNgfPSPjaXGsrR4nmlBosbPpgfvxQ";  
+    const tokenID = this.global.token;
     mapkit.init({     
       authorizationCallback: function(done) {         
         done(tokenID);     
@@ -62,24 +58,18 @@ export class UploadPage implements OnInit {
 
     var self = this;
     navigator.geolocation.getCurrentPosition(function(pos) {
-      self.lat = pos.coords.latitude;
-      self.lng = pos.coords.longitude;
-      self.coords = self.lat + ',' + self.lng;
+      var lat = pos.coords.latitude;
+      var lng = pos.coords.longitude;
+      self.coords = lat + ',' + lng;
 
-      (<HTMLInputElement>document.getElementById("spinner-box")).hidden = true;
-      (<HTMLInputElement>document.getElementById("spinner-box")).style.zIndex = "-1000";
-      (<HTMLInputElement>document.getElementById("progress")).innerHTML = "";
+      self.spinnerBoxToggle(true);
     });
   }
 
-  data: Data = {
-    id : '',
-    gps : '',
-    path : '',
-    notes : '',
-    result : 0,
-    tags : '',
-    date : ''
+  spinnerBoxToggle(toggle: boolean) {
+    (<HTMLInputElement>document.getElementById("spinner-box")).hidden = toggle;
+    (toggle) ? (<HTMLInputElement>document.getElementById("spinner-box")).style.zIndex = "-1000" : (<HTMLInputElement>document.getElementById("spinner-box")).style.zIndex = "1000";
+    (toggle) ? (<HTMLInputElement>document.getElementById("progress")).innerHTML = "" : (<HTMLInputElement>document.getElementById("progress")).innerHTML = "Getting Location...";
   }
 
   back() {
@@ -98,43 +88,34 @@ export class UploadPage implements OnInit {
 
     fileUpload.onchange = (evt) => {
 
-      (<HTMLInputElement>document.getElementById("spinner-box")).hidden = false;
-      (<HTMLInputElement>document.getElementById("spinner-box")).style.zIndex = "1000";
-      (<HTMLInputElement>document.getElementById("progress")).innerHTML = "File Uploading...";
-
       for(var j=0; j < fileUpload.files.length; j++) {
         this.file = fileUpload.files.item(j);
         const reader = new FileReader();
 
         var self = this; //outside angular 'this' => can use self within anonymous functions
 
-        var geoData = (<HTMLInputElement>document.getElementById("gps")).value;
-        var notesData = (<HTMLInputElement>document.getElementById("notes")).value;
-
         reader.onload = function (e) {
           const csv: string = e.target.result as string;
                     
-          // retrieve geo, notes, and img path data from form
-          self.data.gps = geoData;
-          self.data.notes = notesData;
+          // retrieve geo, notes, and img data from form
+          self.data.gps = (<HTMLInputElement>document.getElementById("gps")).value;
+          self.data.notes = (<HTMLInputElement>document.getElementById("notes")).value;
           self.data.path = csv;
 
           // create date for upload
-          var pipe = new DatePipe('en-US');
+          var datepipe = new DatePipe('en-US');
           const now = Date.now();
-          self.data.date = pipe.transform(now, 'short');
+          self.data.date = datepipe.transform(now, 'short');
 
-          const formData = new FormData(fileForm);
-          formData.append('gps', self.data.gps);
-          formData.append('photo', self.file);
-          formData.append('notes', self.data.notes); 
+          self.formData = new FormData(fileForm);
+          self.formData.append('gps', self.data.gps);
+          self.formData.append('photo', self.file);
+          self.formData.append('notes', self.data.notes); 
           self.file.inProgress = true;
-          self.inProgress = self.file.inProgress;
-
-          self.formData = formData;
+          // self.inProgress = self.file.inProgress;
 
           (<HTMLInputElement>document.getElementById("success")).innerHTML += "<ul>" + self.file.name + "</ul>";
-          if(self.file.inProgress == 1) {
+          if(self.file.inProgress == true) {
             self.filesUploaded = true;
           }
         }
@@ -143,12 +124,7 @@ export class UploadPage implements OnInit {
           reader.readAsDataURL(this.file);
         }
       }
-
-      (<HTMLInputElement>document.getElementById("spinner-box")).hidden = true;
-      (<HTMLInputElement>document.getElementById("spinner-box")).style.zIndex = "-1000";
-      (<HTMLInputElement>document.getElementById("progress")).innerHTML = "";
     }
-
     // artificial click for the file upload element => starts the onchange function
     fileUpload.click();
   }
@@ -160,8 +136,8 @@ export class UploadPage implements OnInit {
       map(event => {  
         switch (event.type) {  
           case HttpEventType.UploadProgress:  
-          self.file.progress = Math.round(event.loaded / event.total);  
-            self.progress = self.file.progress;
+            self.file.progress = Math.round(event.loaded / event.total);  
+            // self.progress = self.file.progress;
             break;  
           case HttpEventType.Response:  
             return event;  
@@ -175,9 +151,9 @@ export class UploadPage implements OnInit {
         if (typeof (event) === 'object') {  
           console.log(event.body); 
           if(event.body['status'] == 0) {
-            alert(event.body['msg']);
+            alert(event.body['msg'] + "\nPredicted Oil Content: " + event.body['meta']['result']);  // check whats returned and format the result values
             this.filesUploaded = false;
-            this.inProgress = false;
+            // this.inProgress = false;
             window.location.reload();
           } 
         }  

@@ -62,10 +62,6 @@ export class MenuPage implements OnInit {
     this.router.navigate(['usermeta']);
   }
 
-  predictor() {
-    this.router.navigate(['predictor']);
-  }
-
   logout() {
 
     let options = {

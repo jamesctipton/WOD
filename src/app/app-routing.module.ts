@@ -69,11 +69,6 @@ const routes: Routes = [
     loadChildren: () => import('./usermeta/usermeta.module').then( m => m.UsermetaPageModule),
     canActivate: [AuthGuard]
   },
-  {
-    path: 'predictor',
-    loadChildren: () => import('./predictor/predictor.module').then( m => m.PredictorPageModule),
-    canActivate: [AuthGuard]
-  },
 ];
 
 @NgModule({

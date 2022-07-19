@@ -47,7 +47,8 @@
           </ion-datetime>
       </ion-item>
     </div>
-    <ion-button size="default" color="primary" (click)="submit()" [disabled]="initial == '---'">Submit</ion-button>
+    <ion-button size="default" color="tertiary" (click)="submit(true)" [disabled]="initial == '---'">Show All Entries</ion-button>
+    <ion-button size="default" color="primary" (click)="submit(false)" [disabled]="initial == '---'">Submit</ion-button>
   </ion-card>
 
   <ion-list id="list-element" style="z-index: 1000;">
@@ -71,5 +72,12 @@
   </ion-list>
 
   <div hidden id="zero-items" style="z-index: -1000;"></div>
+
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+    <ion-infinite-scroll-content
+      loadingSpinner="bubbles"
+      loadingText="Loading more data...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 
 </ion-content>

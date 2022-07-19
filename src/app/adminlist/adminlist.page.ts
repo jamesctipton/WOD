@@ -29,6 +29,14 @@ export class AdminlistPage implements OnInit {
   initial: string = '---';
   final: string;
 
+  page: 1;
+  totalPages: number;
+
+  options = {
+    withCredentials: true,
+    headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
+  };
+
   ngOnInit() {
     let now = new Date();
     this.final = now.toDateString();
@@ -36,28 +44,26 @@ export class AdminlistPage implements OnInit {
     (<HTMLInputElement>document.getElementById("final")).max = now.toISOString();
 
     // css stuff to let user know if storage is empty
-    (<HTMLInputElement>document.getElementById("list-element")).hidden = true;
-    (<HTMLInputElement>document.getElementById("list-element")).style.zIndex = "-1000";
-
-    (<HTMLInputElement>document.getElementById("zero-items")).hidden = false;
-    (<HTMLInputElement>document.getElementById("zero-items")).style.zIndex = "1000";
-    (<HTMLInputElement>document.getElementById("zero-items")).innerHTML = "No items to display.";
+    this.toggleListCSS(true);
 
     this.sendRequest(this.epoch, this.final);
+  }
 
+  toggleListCSS(toggle: boolean) {
+    (<HTMLInputElement>document.getElementById("list-element")).hidden = toggle;
+    (<HTMLInputElement>document.getElementById("zero-items")).hidden = !toggle;
+    (toggle) ? (<HTMLInputElement>document.getElementById("list-element")).style.zIndex = "-1000" : (<HTMLInputElement>document.getElementById("list-element")).style.zIndex = "1000";
+    (toggle) ? (<HTMLInputElement>document.getElementById("zero-items")).style.zIndex = "1000" : (<HTMLInputElement>document.getElementById("zero-items")).style.zIndex = "-1000";
+    (toggle) ? (<HTMLInputElement>document.getElementById("zero-items")).innerHTML = "No items to display." : (<HTMLInputElement>document.getElementById("zero-items")).innerHTML = "";
   }
 
   sendRequest(min, max) {
-    let options = {
-      withCredentials: true,
-      headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
-    };
 
     let params = 'mindate='+ min +'&maxdate='+ max;
 
     var self = this;
     this.http
-    .post(this.global.url + '/adminphotolist', params, options)
+    .post(this.global.url + '/adminphotolist', params, this.options)
     .subscribe(response => {
       console.log(response);
       if(response['status'] == 0) {
@@ -66,11 +72,7 @@ export class AdminlistPage implements OnInit {
           item.path = self.global.url + '/' + item.path;
         });
         if(this.data.length != 0) {
-          (<HTMLInputElement>document.getElementById("list-element")).hidden = false;
-          (<HTMLInputElement>document.getElementById("list-element")).style.zIndex = "1000";
-
-          (<HTMLInputElement>document.getElementById("zero-items")).hidden = true;
-          (<HTMLInputElement>document.getElementById("zero-items")).style.zIndex = "-1000";
+          this.toggleListCSS(false);
         }
       }
       else {
@@ -93,8 +95,8 @@ export class AdminlistPage implements OnInit {
     });
   }
 
-  submit() {
-    this.sendRequest(this.initial, this.final);
+  submit(all: boolean) {
+    (all) ? this.sendRequest('-','-') : this.sendRequest(this.initial, this.final);
   }
 
   reset(i) {
@@ -111,6 +113,37 @@ export class AdminlistPage implements OnInit {
         self.sendRequest(self.epoch, self.final);
       }
     });
+  }
+
+  loadData(event) {
+
+    setTimeout(() => {
+      var self = this;
+      this.http
+      .post(this.global.url + '/history', 'page=' + this.page, this.options)
+      .subscribe(response => {
+        // console.log(response);
+        if(response['status'] == 0) {
+          var temp: Data[] = Object.values(response['msg']);
+          temp.forEach(function (item) {
+            item.path = self.global.url + '/' + item.path;
+          });
+          this.data.concat(temp);
+          // console.log(this.data);
+          this.page++;
+        }
+        else {
+          alert(response['msg']);
+        }
+      });
+
+      // App logic to determine if all data is loaded
+      // and disable the infinite scroll.
+      if (this.page == this.totalPages) {
+        event.target.disabled = true;
+      }
+    }, 500);
+    
   }
 
   back() {

@@ -23,23 +23,22 @@ export class AdmininfoPage implements OnInit {
   data: Data[] = [];      // data to load
   updated: string[] = []; // keep track of each data item that gets updated when the input is changed
 
+  page: 1;
+  totalPages: number;
+
+  options = {
+    withCredentials: true,
+    headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
+  }
+
   ngOnInit() {
 
     // if list element has 0 items, display a div letting the user know, else hide the div
-    (<HTMLInputElement>document.getElementById("list-element")).hidden = true;
-    (<HTMLInputElement>document.getElementById("list-element")).style.zIndex = "-1000";
-
-    (<HTMLInputElement>document.getElementById("zero-items")).hidden = false;
-    (<HTMLInputElement>document.getElementById("zero-items")).style.zIndex = "1000";
-    (<HTMLInputElement>document.getElementById("zero-items")).innerHTML = "No items to display.";
-
-    let options = {
-      withCredentials: true
-    }
+    this.toggleListCSS(true);
 
     var self = this;
     this.http
-    .get(this.global.url + '/history', options)
+    .post(this.global.url + '/history', 'page=' + this.page, this.options)
     .subscribe(response => {
       // console.log(response);
       if(response['status'] == 0) {
@@ -48,24 +47,26 @@ export class AdmininfoPage implements OnInit {
           item.path = self.global.url + '/' + item.path;
         });
         // console.log(this.data);
+
+        this.totalPages = response['meta']['total_page'];
+        this.page++;
         
         // un-empty the storage css
-        (<HTMLInputElement>document.getElementById("list-element")).hidden = false;
-        (<HTMLInputElement>document.getElementById("list-element")).style.zIndex = "1000";
-
-        (<HTMLInputElement>document.getElementById("zero-items")).hidden = true;
-        (<HTMLInputElement>document.getElementById("zero-items")).style.zIndex = "-1000";
+        this.toggleListCSS(false);
       }
       else {
         alert(response['msg']);
-        (<HTMLInputElement>document.getElementById("list-element")).hidden = false;
-        (<HTMLInputElement>document.getElementById("list-element")).style.zIndex = "1000";
-
-        (<HTMLInputElement>document.getElementById("zero-items")).hidden = true;
-        (<HTMLInputElement>document.getElementById("zero-items")).style.zIndex = "-1000";
       }
     });
 
+  }
+
+  toggleListCSS(toggle: boolean) {
+    (<HTMLInputElement>document.getElementById("list-element")).hidden = toggle;
+    (<HTMLInputElement>document.getElementById("zero-items")).hidden = !toggle;
+    (toggle) ? (<HTMLInputElement>document.getElementById("list-element")).style.zIndex = "-1000" : (<HTMLInputElement>document.getElementById("list-element")).style.zIndex = "1000";
+    (toggle) ? (<HTMLInputElement>document.getElementById("zero-items")).style.zIndex = "1000" : (<HTMLInputElement>document.getElementById("zero-items")).style.zIndex = "-1000";
+    (toggle) ? (<HTMLInputElement>document.getElementById("zero-items")).innerHTML = "No items to display." : (<HTMLInputElement>document.getElementById("zero-items")).innerHTML = "";
   }
 
   back() {
@@ -80,13 +81,7 @@ export class AdmininfoPage implements OnInit {
   }
 
   update() {
-    let options = {
-      withCredentials: true,
-      headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
-    }
-
     let body;
-
     this.updated.forEach( index => {
       var item = this.data.find( ({id}) => id === index);
 
@@ -96,7 +91,7 @@ export class AdmininfoPage implements OnInit {
       body = 'photo_id=' + item.id + '&notes=' + notes + '&tags=' + tags;
 
       this.http
-      .post(this.global.url + '/adminupdatephotoinfo', body, options)
+      .post(this.global.url + '/adminupdatephotoinfo', body, this.options)
       .subscribe(response => {
         console.log(response);
         if(response['status'] == 0) {
@@ -123,36 +118,36 @@ export class AdmininfoPage implements OnInit {
     this.updated.push(id);
   }
 
-  // loadData(event) {
-  //   // how large of chunks to grab from storage at a time
-  //   var inc = 10;
-  //   setTimeout(() => {
-  //     // get an array of inc promises from storage
-  //     // temp array a to hold values
-  //     var a = this.storage.getNItems(this.j.toString(), inc);
+  loadData(event) {
 
-  //     // temp array b to use for filtering
-  //     var b = [];
-  //     // resolve all promises, concat onto data array
-  //     Promise.all(a).then((vals) => {
-  //       vals.forEach(function (val) {
-  //         // filter out null values, copy into array b
-  //         if(val != null) {
-  //           b.push(val);
-  //         }
-  //       });
-  //       this.data = this.data.concat(b);
-  //       event.target.complete();
-  //       this.j+= inc;
-  //     });
+    setTimeout(() => {
+      var self = this;
+      this.http
+      .post(this.global.url + '/history', 'page=' + this.page, this.options)
+      .subscribe(response => {
+        // console.log(response);
+        if(response['status'] == 0) {
+          var temp: Data[] = Object.values(response['msg']);
+          temp.forEach(function (item) {
+            item.path = self.global.url + '/' + item.path;
+          });
+          this.data.concat(temp);
+          // console.log(this.data);
+          this.page++;
+        }
+        else {
+          alert(response['msg']);
+        }
+      });
 
-  //     // App logic to determine if all data is loaded
-  //     // and disable the infinite scroll  => current limit is 1000 but can be extended.
-  //     if (this.data.length === 1000) {
-  //       event.target.disabled = true;
-  //     }
-  //   }, 500);
-  // }
+      // App logic to determine if all data is loaded
+      // and disable the infinite scroll.
+      if (this.page == this.totalPages) {
+        event.target.disabled = true;
+      }
+    }, 500);
+    
+  }
 
   changeGPS(id) {
     console.log(id);

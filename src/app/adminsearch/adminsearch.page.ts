@@ -22,42 +22,49 @@ export class AdminsearchPage implements OnInit {
   data: Data[] = [];      // data to load
   search_indexes: Data[] = []; // searched data to load
 
+  page: 1;
+  totalPages: number;
+
+  options = {
+    withCredentials: true,
+    headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
+  };
+
   ngOnInit() {
 
     // css stuff to let user know if storage is empty
-    (<HTMLInputElement>document.getElementById("list-element")).hidden = true;
-    (<HTMLInputElement>document.getElementById("list-element")).style.zIndex = "-1000";
-
-    (<HTMLInputElement>document.getElementById("zero-items")).hidden = false;
-    (<HTMLInputElement>document.getElementById("zero-items")).style.zIndex = "1000";
-    (<HTMLInputElement>document.getElementById("zero-items")).innerHTML = "No items to display.";
-    
-    let options = {
-      withCredentials: true
-    }
+    this.toggleListCSS(true);
 
     var self = this;
     this.http
-    .get(this.global.url + '/history', options)
+    .post(this.global.url + '/history', 'page=' + this.page, this.options)
     .subscribe(response => {
+      // console.log(response);
       if(response['status'] == 0) {
-        // console.log(response);
         this.data = Object.values(response['msg']);
         this.data.forEach(function (item) {
           item.path = self.global.url + '/' + item.path;
         });
+        // console.log(this.data);
+
+        this.totalPages = response['meta']['total_page'];
+        this.page++;
         
         // un-empty the storage css
-        (<HTMLInputElement>document.getElementById("list-element")).hidden = false;
-        (<HTMLInputElement>document.getElementById("list-element")).style.zIndex = "1000";
-
-        (<HTMLInputElement>document.getElementById("zero-items")).hidden = true;
-        (<HTMLInputElement>document.getElementById("zero-items")).style.zIndex = "-1000";
+        this.toggleListCSS(false);
       }
       else {
         alert(response['msg']);
       }
     });
+  }
+
+  toggleListCSS(toggle: boolean) {
+    (<HTMLInputElement>document.getElementById("list-element")).hidden = toggle;
+    (<HTMLInputElement>document.getElementById("zero-items")).hidden = !toggle;
+    (toggle) ? (<HTMLInputElement>document.getElementById("list-element")).style.zIndex = "-1000" : (<HTMLInputElement>document.getElementById("list-element")).style.zIndex = "1000";
+    (toggle) ? (<HTMLInputElement>document.getElementById("zero-items")).style.zIndex = "1000" : (<HTMLInputElement>document.getElementById("zero-items")).style.zIndex = "-1000";
+    (toggle) ? (<HTMLInputElement>document.getElementById("zero-items")).innerHTML = "No items to display." : (<HTMLInputElement>document.getElementById("zero-items")).innerHTML = "";
   }
 
   back() {
@@ -76,16 +83,13 @@ export class AdminsearchPage implements OnInit {
     let notesParams = 'querystring=' + notes;
     let tagsParams = 'taglist=' + tags;
 
-    let options = {
-      withCredentials: true,
-      headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
-    }
-
     var self = this;
+
+    // CURRENTLY THE FILTERS ARE BY INTERSECTION
 
     // GPS SEARCH FILTER
     this.http
-    .post(this.global.url + '/searchfiltergeography', geoParams, options)
+    .post(this.global.url + '/searchfiltergeography', geoParams, this.options)
     .subscribe(response => {
       // console.log(response);
       if(response['status'] == 0) {
@@ -93,13 +97,8 @@ export class AdminsearchPage implements OnInit {
         this.data.forEach(function (item) {
           item.path = self.global.url + '/' + item.path;
         });
-        
         // un-empty the storage css
-        (<HTMLInputElement>document.getElementById("list-element")).hidden = false;
-        (<HTMLInputElement>document.getElementById("list-element")).style.zIndex = "1000";
-
-        (<HTMLInputElement>document.getElementById("zero-items")).hidden = true;
-        (<HTMLInputElement>document.getElementById("zero-items")).style.zIndex = "-1000";
+        this.toggleListCSS(false);
       }
       else {
         alert(response['msg']);
@@ -107,7 +106,7 @@ export class AdminsearchPage implements OnInit {
     });
     // NOTES SEARCH FILTER
     this.http
-    .post(this.global.url + '/searchfilterglobal', notesParams, options)
+    .post(this.global.url + '/searchfilterglobal', notesParams, this.options)
     .subscribe(response => {
       // console.log(response);
       if(response['status'] == 0) {
@@ -115,13 +114,8 @@ export class AdminsearchPage implements OnInit {
         this.data.forEach(function (item) {
           item.path = self.global.url + '/' + item.path;
         });
-        
         // un-empty the storage css
-        (<HTMLInputElement>document.getElementById("list-element")).hidden = false;
-        (<HTMLInputElement>document.getElementById("list-element")).style.zIndex = "1000";
-
-        (<HTMLInputElement>document.getElementById("zero-items")).hidden = true;
-        (<HTMLInputElement>document.getElementById("zero-items")).style.zIndex = "-1000";
+        this.toggleListCSS(false);
       }
       else {
         alert(response['msg']);
@@ -130,7 +124,7 @@ export class AdminsearchPage implements OnInit {
 
     // TAGS SEARCH FILTER
     this.http
-    .post(this.global.url + '/searchfiltertag', tagsParams, options)
+    .post(this.global.url + '/searchfiltertag', tagsParams, this.options)
     .subscribe(response => {
       // console.log(response);
       if(response['status'] == 0) {
@@ -138,13 +132,8 @@ export class AdminsearchPage implements OnInit {
         this.data.forEach(function (item) {
           item.path = self.global.url + '/' + item.path;
         });
-        
         // un-empty the storage css
-        (<HTMLInputElement>document.getElementById("list-element")).hidden = false;
-        (<HTMLInputElement>document.getElementById("list-element")).style.zIndex = "1000";
-
-        (<HTMLInputElement>document.getElementById("zero-items")).hidden = true;
-        (<HTMLInputElement>document.getElementById("zero-items")).style.zIndex = "-1000";
+        this.toggleListCSS(false);
       }
       else {
         alert(response['msg']);
@@ -152,12 +141,7 @@ export class AdminsearchPage implements OnInit {
     });
 
     if(this.data.length == 0) {
-      (<HTMLInputElement>document.getElementById("list-element")).hidden = true;
-      (<HTMLInputElement>document.getElementById("list-element")).style.zIndex = "-1000";
-
-      (<HTMLInputElement>document.getElementById("zero-items")).hidden = false;
-      (<HTMLInputElement>document.getElementById("zero-items")).style.zIndex = "1000";
-      (<HTMLInputElement>document.getElementById("zero-items")).innerHTML = "No items to display.";
+      this.toggleListCSS(true);
     }
   }
 
@@ -172,86 +156,36 @@ export class AdminsearchPage implements OnInit {
     (<HTMLInputElement>document.getElementById("tags")).value = '';
   }
 
-  // search() {
-  //   let geo = (<HTMLInputElement>document.getElementById("geo")).value;
-  //   let notes = (<HTMLInputElement>document.getElementById("notes")).value;
-  //   let tags = (<HTMLInputElement>document.getElementById("tags")).value;
+  loadData(event) {
 
-  //   this.search_indexes.forEach(item => {
+    // setTimeout(() => {
+    //   var self = this;
+    //   this.http
+    //   .post(this.global.url + '/history', 'page=' + this.page, this.options)
+    //   .subscribe(response => {
+    //     // console.log(response);
+    //     if(response['status'] == 0) {
+    //       var temp: Data[] = Object.values(response['msg']);
+    //       temp.forEach(function (item) {
+    //         item.path = self.global.url + '/' + item.path;
+    //       });
+    //       this.data.concat(temp);
+    //       // console.log(this.data);
+    //       this.page++;
+    //     }
+    //     else {
+    //       alert(response['msg']);
+    //     }
+    //   });
 
-  //     if( !
-  //       (item.gps.includes(geo) &&
-  //        item.notes.includes(notes) &&
-  //        item.tags.includes(tags))
-  //       ) {
-
-  //          // if array does not have any of the geo, notes, or tags searches, remove it
-  //          this.search_indexes.splice(this.search_indexes.indexOf(item), 1);
-  //          // need to recursively call search for some reason the updating is weird.
-  //          this.search();
-  //       }
-  //   });
-
-  //   if(this.search_indexes.length == 0) {
-  //     (<HTMLInputElement>document.getElementById("list-element")).hidden = true;
-  //     (<HTMLInputElement>document.getElementById("list-element")).style.zIndex = "-1000";
-
-  //     (<HTMLInputElement>document.getElementById("zero-items")).hidden = false;
-  //     (<HTMLInputElement>document.getElementById("zero-items")).style.zIndex = "1000";
-  //     (<HTMLInputElement>document.getElementById("zero-items")).innerHTML = "No items to display.";
-  //   }
-  //   else {
-  //     (<HTMLInputElement>document.getElementById("list-element")).hidden = false;
-  //     (<HTMLInputElement>document.getElementById("list-element")).style.zIndex = "1000";
-
-  //     (<HTMLInputElement>document.getElementById("zero-items")).hidden = true;
-  //     (<HTMLInputElement>document.getElementById("zero-items")).style.zIndex = "-1000";
-  //   }
-
-  // }
-
-  // reset() {
-  //   // reset search indexes to full data backup
-  //   this.search_indexes = this.data;
-  //   // clear text fields
-  //   window.location.reload();
-  //   (<HTMLInputElement>document.getElementById("geo")).value = '';
-  //   (<HTMLInputElement>document.getElementById("notes")).value = '';
-  //   (<HTMLInputElement>document.getElementById("tags")).value = '';
-
-  // }
-
-  // loadData(event) {
-  //   // how large of chunks to grab from storage at a time
-  //   var inc = 10;
-  //   setTimeout(() => {
-  //     // get an array of inc promises from storage
-  //     // temp array a to hold values
-  //     var a = this.storage.getNItems(this.j.toString(), inc);
-
-  //     // temp array b to use for filtering
-  //     var b = [];
-  //     // resolve all promises, concat onto data array
-  //     Promise.all(a).then((vals) => {
-  //       vals.forEach(function (val) {
-  //         // filter out null values, copy into array b
-  //         if(val != null) {
-  //           b.push(val);
-  //         }
-  //       });
-  //       this.data = this.data.concat(b);
-  //       this.search_indexes = this.data;
-  //       event.target.complete();
-  //       this.j+= inc;
-  //     });
-
-  //     // App logic to determine if all data is loaded
-  //     // and disable the infinite scroll  => current limit is 1000 but can be extended.
-  //     if (this.data.length === 1000) {
-  //       event.target.disabled = true;
-  //     }
-  //   }, 500);
-  // }
+    //   // App logic to determine if all data is loaded
+    //   // and disable the infinite scroll.
+    //   if (this.page == this.totalPages) {
+    //     event.target.disabled = true;
+    //   }
+    // }, 500);
+    
+  }
 
   detail(item) {
     var datum = JSON.stringify(this.data.find( ({id}) => id === item));
@@ -259,3 +193,5 @@ export class AdminsearchPage implements OnInit {
   }
 
 }
+
+// need to do pages later but not urgent because low db amounts now
